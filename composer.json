@@ -2,7 +2,8 @@
   "require": {
     "silex/silex": "^2.0",
     "php": ">=7.1.2",
-    "php-activerecord/php-activerecord": "^1.2"
+    "php-activerecord/php-activerecord": "^1.2",
+    "symfony/validator": "^4.1"
   },
   "autoload": {
     "psr-4": {
@@ -13,5 +14,8 @@
     "psr-4": {
       "App\\Tests\\": "tests/"
     }
+  },
+  "require-dev": {
+    "symfony/phpunit-bridge": "*"
   }
 }
