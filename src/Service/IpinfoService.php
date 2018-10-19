@@ -6,7 +6,14 @@ class IpinfoService
 {
     const IPINFO_URL = 'http://ipinfo.io/';
 
-    public function getGeolocation(string $ip): string
+    /**
+     * Get geo-location information from ipinfo service
+     *
+     * @param string $ip IP to get geo-location info for
+     *
+     * @return array Geolocation information
+     */
+    public function getGeolocation(string $ip): array
     {
         $handle = curl_init();
 
@@ -19,10 +26,10 @@ class IpinfoService
             ]
         );
 
-        $data = curl_exec($handle);
+        $result = curl_exec($handle);
 
         curl_close($handle);
 
-        return json_decode($data, true);
+        return json_decode($result, true);
     }
 }
