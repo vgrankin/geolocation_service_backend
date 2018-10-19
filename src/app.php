@@ -1,7 +1,5 @@
 <?php
 
-header('Access-Control-Allow-Origin: *');
-
 require_once __DIR__.'/../vendor/autoload.php';
 
 use App\Controller\IpinfoController;
@@ -9,8 +7,6 @@ use App\Service\IpinfoService;
 use App\Service\IpinfoPersisterService;
 
 $app = new Silex\Application();
-
-$app['debug'] = true;
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new Silex\Provider\ValidatorServiceProvider());
@@ -44,4 +40,4 @@ $app['ipinfos.controller'] = function () use ($app) {
 $app->get('/', "ipinfos.controller:index");
 $app->get('/ipinfo', "ipinfos.controller:ipinfo");
 
-$app->run();
+return $app;
