@@ -16,7 +16,9 @@
         </testsuite>
     </testsuites>
 
-    <php>
-        <env name="env" value="test" />
-    </php>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
