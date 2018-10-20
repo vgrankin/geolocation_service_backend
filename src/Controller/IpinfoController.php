@@ -2,15 +2,16 @@
 
 namespace App\Controller;
 
-use App\Service\IpinfoService;
 use App\Service\IpinfoPersisterService;
-use Symfony\Component\HttpFoundation\Request;
+use App\Service\IpinfoService;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class IpinfoController
 {
+    protected $request;
     /**
      * @var IpinfoService Service to retrieve IP geo-info
      *                    from the internet
@@ -27,10 +28,12 @@ class IpinfoController
     protected $validator;
 
     public function __construct(
+        Request $request,
         IpinfoService $ipinfoService,
         IpinfoPersisterService $ipinfoPersisterService,
         ValidatorInterface $validator
     ) {
+        $this->request = $request;
         $this->ipinfoService = $ipinfoService;
         $this->ipinfoPersisterService = $ipinfoPersisterService;
         $this->validator = $validator;
@@ -43,11 +46,20 @@ class IpinfoController
      */
     public function index()
     {
-        return new JsonResponse(
-            [
-                'ip' => Request::createFromGlobals()->getClientIp(),
-            ]
+        $ip = $this->request->getClientIp();
+
+        $errors = $this->validator->validate(
+            $ip,
+            new Assert\Ip(['version' => 'all_public'])
         );
+
+        if (count($errors) > 0) {
+            $data = ['error' => 'Not a public IP'];
+        } else {
+            $data = ['ip' => $ip];
+        }
+
+        return new JsonResponse($data);
     }
 
     /**
@@ -60,7 +72,7 @@ class IpinfoController
      */
     public function ipinfo()
     {
-        $ip = Request::createFromGlobals()->getClientIp();
+        $ip = $this->request->getClientIp();
 
         $errors = $this->validator->validate(
             $ip,
