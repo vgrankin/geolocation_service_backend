@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Service;
 
 use App\Service\IpinfoPersisterService;
+use App\Tests\TestUtils;
+use PHPUnit\Framework\TestCase;
 
-class IpinfoPersisterServiceTest extends BaseTestCase
+class IpinfoPersisterServiceTest extends TestCase
 {
+    use TestUtils;
+
     public function setUp()
     {
-        parent::setUp();
-
         $this->configureActiverecord();
         $this->truncateTable();
     }

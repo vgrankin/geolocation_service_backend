@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Service;
 
 use App\Service\IpinfoService;
+use PHPUnit\Framework\TestCase;
 
-class IpinfoServiceTest extends BaseTestCase
+class IpinfoServiceTest extends TestCase
 {
     public function testGetGeolocation____When_Calling_With_Valid_IP____Ipinfo_Array_Is_Returned()
     {

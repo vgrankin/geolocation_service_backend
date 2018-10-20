@@ -2,19 +2,10 @@
 
 namespace App\Tests;
 
-use PHPUnit\Framework\TestCase;
 use App\Model\Ipinfo;
 
-class BaseTestCase extends TestCase
+trait TestUtils
 {
-    /**
-     * setUp() method executes before every test
-     */
-    public function setUp()
-    {
-
-    }
-
     /**
      * Configure database-for-tests to work with
      */
@@ -32,6 +23,9 @@ class BaseTestCase extends TestCase
         );
     }
 
+    /**
+     * Delete all records from `ipinfos` table
+     */
     public function truncateTable()
     {
         Ipinfo::delete_all(array('conditions' => 'ip != ""'));
