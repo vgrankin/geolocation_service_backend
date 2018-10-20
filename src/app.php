@@ -3,8 +3,8 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use App\Controller\IpinfoController;
-use App\Service\IpinfoService;
 use App\Service\IpinfoPersisterService;
+use App\Service\IpinfoService;
 
 $app = new Silex\Application();
 
@@ -33,7 +33,10 @@ $app['ipinfo_persister'] = function () {
 
 $app['ipinfos.controller'] = function () use ($app) {
     return new IpinfoController(
-        $app['ipinfo'], $app['ipinfo_persister'], $app['validator']
+        $app['request_stack']->getCurrentRequest(),
+        $app['ipinfo'],
+        $app['ipinfo_persister'],
+        $app['validator']
     );
 };
 //
