@@ -127,14 +127,20 @@ https://blog.mwaysolutions.com/2014/06/05/10-best-practices-for-better-restful-a
     
     * If you use docker, make sure PHP and MySQL (with required database) containers are up and running
 
-You can simply look at and run PHPUnit tests (look at tests folder where all test files are located) 
+It is assumed that this REST API will be consumed by frontend application. Please see another github repository
+for a frontend (jQuery-based) consumer: https://github.com/vgrankin/geolocation_service_frontend
+
+Another way is that you can look at and run PHPUnit tests (look at tests folder where all test files are located) 
 to execute all possible REST API endpoints. (To run all tests execute this command from project's root folder: 
-`./vendor/bin/simple-phpunit --configuration phpunit.xml.dist`, but if you want, you can also simply use browser to 
+`./vendor/bin/simple-phpunit --configuration phpunit.xml.dist`, but if you want, you can also use browser to 
 manually access REST API endpoints. Here is how to test all currently available API endpoints:
     
-We can use Google CHROME to access all endpoints:
+We can simply use Google Chrome browser to access all endpoints:
 
     * Here is a table of possible operations:
+    (to make testing fun you can replace $ip with "8.8.8.8" for example. Just temporary replace
+    line IpinfoController::ipinfo(): $ip = $this->request->getClientIp(); to $ip = "8.8.8.8"
+    and here: IpinfoController::index(): $ip = $this->request->getClientIp(); to $ip = "8.8.8.8")
     
     --------------------------- --------  -------------------- 
      Action                      Method    Path                
