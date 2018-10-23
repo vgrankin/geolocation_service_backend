@@ -24,7 +24,7 @@ class IpinfoPersisterService
     {
         return Ipinfo::create(
             [
-                'ip' => $data['ip'],
+                'ip' => inet_pton($data['ip']),
                 'city' => $data['city'],
                 'country' => $data['country'],
             ]
@@ -41,9 +41,9 @@ class IpinfoPersisterService
     public function read(string $ip): ?array
     {
         try {
-            $model = @Ipinfo::find($ip);
+            $model = @Ipinfo::find(inet_pton($ip));
             return [
-                'ip' => $model->ip,
+                'ip' => inet_ntop($model->ip),
                 'city' => $model->city,
                 'country' => $model->country
             ];

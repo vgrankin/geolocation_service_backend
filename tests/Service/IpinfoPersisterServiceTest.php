@@ -24,7 +24,7 @@ class IpinfoPersisterServiceTest extends TestCase
         $result = $persister->create($data);
 
         $this->assertInstanceOf(\ActiveRecord\Model::class, $result);
-        $this->assertEquals($data['ip'], $result->ip);
+        $this->assertEquals($data['ip'], inet_ntop($result->ip));
         $this->assertEquals($data['city'], $result->city);
         $this->assertEquals($data['country'], $result->country);
     }

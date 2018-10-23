@@ -55,6 +55,7 @@ class IpinfoController
     public function index()
     {
         $ip = $this->request->getClientIp();
+        $ip = '8.8.8.8';
 
         $status = JsonResponse::HTTP_OK;
         $data = [
@@ -77,6 +78,7 @@ class IpinfoController
     public function ipinfo()
     {
         $ip = $this->request->getClientIp();
+        $ip = '8.8.8.8';
 
         $errors = $this->validator->validate(
             $ip,
