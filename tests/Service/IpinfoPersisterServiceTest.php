@@ -38,10 +38,9 @@ class IpinfoPersisterServiceTest extends TestCase
 
         $result = $persister->read($data['ip']);
 
-        $this->assertInstanceOf(\ActiveRecord\Model::class, $result);
-        $this->assertEquals($data['ip'], $result->ip);
-        $this->assertEquals($data['city'], $result->city);
-        $this->assertEquals($data['country'], $result->country);
+        $this->assertEquals($data['ip'], $result['ip']);
+        $this->assertEquals($data['city'], $result['city']);
+        $this->assertEquals($data['country'], $result['country']);
     }
 
     public function testRead____When_Calling_With_Inexisting_IP____Null_Is_Returned()

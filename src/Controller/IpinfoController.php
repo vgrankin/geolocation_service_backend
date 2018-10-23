@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\IpinfoPersisterService;
 use App\Service\IpinfoService;
+use App\Service\ResponseErrorDecoratorService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -26,17 +27,24 @@ class IpinfoController
      * @var ValidatorInterface Service to validate IP
      */
     protected $validator;
+    /**
+     * @var ResponseErrorDecoratorService Service to produce well-formatted
+     *                                    error responses
+     */
+    protected $errorDecorator;
 
     public function __construct(
         Request $request,
         IpinfoService $ipinfoService,
         IpinfoPersisterService $ipinfoPersisterService,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        ResponseErrorDecoratorService $errorDecorator
     ) {
         $this->request = $request;
         $this->ipinfoService = $ipinfoService;
         $this->ipinfoPersisterService = $ipinfoPersisterService;
         $this->validator = $validator;
+        $this->errorDecorator = $errorDecorator;
     }
 
     /**
@@ -48,18 +56,14 @@ class IpinfoController
     {
         $ip = $this->request->getClientIp();
 
-        $errors = $this->validator->validate(
-            $ip,
-            new Assert\Ip(['version' => 'all_public'])
-        );
+        $status = JsonResponse::HTTP_OK;
+        $data = [
+            'data' => [
+                'ip' => $ip,
+            ],
+        ];
 
-        if (count($errors) > 0) {
-            $data = ['error' => 'Not a public IP'];
-        } else {
-            $data = ['ip' => $ip];
-        }
-
-        return new JsonResponse($data);
+        return new JsonResponse($data, $status);
     }
 
     /**
@@ -80,26 +84,48 @@ class IpinfoController
         );
 
         if (count($errors) > 0) {
-            $data = [
-                'city' => 'Not available',
-                'country' => 'Not available',
-            ];
+            $status = JsonResponse::HTTP_BAD_REQUEST;
+            $data = $this->errorDecorator->decorateError(
+                $status,
+                "Not a public IP. Geolocation info is not available."
+            );
         } else {
-            $result = $this->ipinfoService->getGeolocation($ip);
+            $result = $this->ipinfoPersisterService->read($ip);
+            if (!$result) {
+                $result = $this->ipinfoService->getGeolocation($ip);
+
+                // also save/cache to DB if no error
+                if (!isset($result['error'])) {
+                    $this->ipinfoPersisterService->create(
+                        [
+                            'ip' => $ip,
+                            'city' => $result['city'],
+                            'country' => $result['country']
+                        ]
+                    );
+                }
+            }
 
             if (isset($result['error'])) {
-                $data = [
-                    'error' => "Unable to retrieve geo-location data"
-                        ." for given IP ($ip).",
-                ];
+                $status = JsonResponse::HTTP_BAD_REQUEST;
+                $data = $this->errorDecorator->decorateError(
+                    $status,
+                    "Unable to retrieve geo-location data for given IP ($ip)."
+                );
+
+                return new JsonResponse($data, $status);
+
             } else {
+                $status = JsonResponse::HTTP_OK;
                 $data = [
-                    'city' => $result['city'],
-                    'country' => $result['country'],
+                    'data' => [
+                        'city' => $result['city'],
+                        'country' => $result['country']
+                    ]
                 ];
             }
         }
 
-        return new JsonResponse($data);
+        return new JsonResponse($data, $status);
     }
 }

@@ -38,10 +38,15 @@ class IpinfoPersisterService
      *
      * @return array|null
      */
-    public function read(string $ip): ?\ActiveRecord\Model
+    public function read(string $ip): ?array
     {
         try {
-            return Ipinfo::find($ip);
+            $model = @Ipinfo::find($ip);
+            return [
+                'ip' => $model->ip,
+                'city' => $model->city,
+                'country' => $model->country
+            ];
         } catch (RecordNotFound $e) {
             return null;
         }

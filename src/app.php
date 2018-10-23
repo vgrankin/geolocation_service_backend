@@ -5,6 +5,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 use App\Controller\IpinfoController;
 use App\Service\IpinfoPersisterService;
 use App\Service\IpinfoService;
+use App\Service\ResponseErrorDecoratorService;
 
 $app = new Silex\Application();
 
@@ -31,12 +32,17 @@ $app['ipinfo_persister'] = function () {
     return new IpinfoPersisterService();
 };
 
+$app['error_decorator'] = function () {
+    return new ResponseErrorDecoratorService();
+};
+
 $app['ipinfos.controller'] = function () use ($app) {
     return new IpinfoController(
         $app['request_stack']->getCurrentRequest(),
         $app['ipinfo'],
         $app['ipinfo_persister'],
-        $app['validator']
+        $app['validator'],
+        $app['error_decorator']
     );
 };
 //

@@ -30,6 +30,12 @@ class IpinfoService
 
         curl_close($handle);
 
-        return json_decode($result, true);
+        if (!$result) {
+            $data = ['error' => true];
+        } else {
+            $data = $result;
+        }
+
+        return json_decode($data, true);
     }
 }
