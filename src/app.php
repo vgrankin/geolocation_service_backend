@@ -46,7 +46,7 @@ $app['ipinfos.controller'] = function () use ($app) {
     );
 };
 //
-$app->get('/', "ipinfos.controller:index");
-$app->get('/ipinfo', "ipinfos.controller:ipinfo");
+$app->get('/api/ip', "ipinfos.controller:index");
+$app->get('/api/ipinfo', "ipinfos.controller:ipinfo");
 
 return $app;

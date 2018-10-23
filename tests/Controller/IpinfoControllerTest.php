@@ -44,7 +44,7 @@ class IpinfoControllerTest extends WebTestCase
         $ip = '8.8.8.8';
         $client = static::createClient(['REMOTE_ADDR' => $ip]);
 
-        $client->xmlHttpRequest('GET', '/');
+        $client->xmlHttpRequest('GET', '/api/ip');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
@@ -62,7 +62,7 @@ class IpinfoControllerTest extends WebTestCase
 
         $client = static::createClient(['REMOTE_ADDR' => $data['ip']]);
 
-        $client->xmlHttpRequest('GET', '/ipinfo');
+        $client->xmlHttpRequest('GET', '/api/ipinfo');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
@@ -78,7 +78,7 @@ class IpinfoControllerTest extends WebTestCase
         $ip = '127.0.0.1';
         $client = static::createClient(['REMOTE_ADDR' => $ip]);
 
-        $client->xmlHttpRequest('GET', '/ipinfo');
+        $client->xmlHttpRequest('GET', '/api/ipinfo');
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
@@ -104,7 +104,7 @@ class IpinfoControllerTest extends WebTestCase
         $ip = '8.8.8.8';
         $client = static::createClient(['REMOTE_ADDR' => $ip]);
 
-        $client->xmlHttpRequest('GET', '/ipinfo');
+        $client->xmlHttpRequest('GET', '/api/ipinfo');
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
@@ -134,7 +134,7 @@ class IpinfoControllerTest extends WebTestCase
 
         $client = static::createClient(['REMOTE_ADDR' => $data['ip']]);
 
-        $client->xmlHttpRequest('GET', '/ipinfo');
+        $client->xmlHttpRequest('GET', '/api/ipinfo');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
